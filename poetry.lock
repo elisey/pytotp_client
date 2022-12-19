@@ -241,7 +241,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "pykeychain"
-version = "1.0.0"
+version = "1.1.0"
 description = "Library for adding, getting and removing simple passwords from macos keychain."
 category = "main"
 optional = false
@@ -332,7 +332,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8.1"
-content-hash = "1846ec3089c03dee849cd48a64da56ff57802ac7d881a77a02ad1291769b34a2"
+content-hash = "0ebc0cf7c904d82e69d025d10a4cddb427273f4e0a9b6befb4020ae9819073f0"
 
 [metadata.files]
 attrs = []
