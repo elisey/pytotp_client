@@ -1,4 +1,4 @@
-from pytotp_client._cli import entrypoint
+from ._cli import entrypoint
 
 
 entrypoint()

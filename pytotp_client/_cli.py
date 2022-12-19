@@ -1,9 +1,9 @@
 import argparse
 import sys
 
-from _client import Client, ClientError
-from _clipboard import write_to_clipboard
-from _constants import SERVICE_NAME
+from ._client import Client, ClientError
+from ._clipboard import write_to_clipboard
+from ._constants import SERVICE_NAME
 from pykeychain import Storage
 
 
