@@ -7,7 +7,7 @@ from pykeychain import Storage
 
 from ._client import Client, ClientError, Item
 from ._clipboard import write_to_clipboard
-from ._constants import SERVICE_NAME
+from ._colorizer import Color, colorize
 
 
 def _parce_cli_arguments() -> argparse.Namespace:
@@ -35,6 +35,10 @@ def print_items(items: list[Item]) -> None:
         print(f"{item.account}: {item.otp}")
 
 
+def print_error(message: str) -> None:
+    print(colorize(message, Color.RED))
+
+
 def entrypoint() -> None:
     args = _parce_cli_arguments()
     storage = Storage(SERVICE_NAME)
@@ -57,11 +61,15 @@ def entrypoint() -> None:
         elif args.command == "search":
             items = client.search_items(args.pattern)
             if not items:
-                print(f"Nothing found for search pattern {args.pattern}")
-            print_items(items)
+                print_error(f"Nothing found for search pattern {args.pattern}")
+            else:
+                print_items(items)
+        else:
+            print_error("Missing required argument 'command'")
+            sys.exit(4)
 
     except ClientError as e:
-        print(str(e))
+        print_error(str(e))
         sys.exit(e.return_code)
 
 

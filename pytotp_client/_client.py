@@ -67,10 +67,10 @@ class Client:
         try:
             self.storage.save_password(account, secret)
         except AlreadyExistsException:
-            raise ClientError(message=f"Entry {account} already exists.", return_code=2)
+            raise ClientError(message=f"Entry {account} already exists", return_code=2)
 
     def delete_secret(self, account: str) -> None:
         try:
             self.storage.delete(account)
         except NotFoundException:
-            raise ClientError(message=f"Entry {account} not found.", return_code=1)
+            raise ClientError(message=f"Entry {account} not found", return_code=1)
