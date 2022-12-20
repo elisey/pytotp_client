@@ -8,6 +8,7 @@ from pykeychain import Storage
 from ._client import Client, ClientError, Item
 from ._clipboard import write_to_clipboard
 from ._colorizer import Color, colorize
+from ._constants import PACKAGE_NAME, SERVICE_NAME
 
 
 def _parce_cli_arguments() -> argparse.Namespace:
@@ -27,6 +28,8 @@ def _parce_cli_arguments() -> argparse.Namespace:
     parser_search = subparser.add_parser("search", help="Search for items")
     parser_search.add_argument("pattern", type=str, help="search pattern")
 
+    parser.add_argument("--version", action="store_true", default=False)
+
     return parser.parse_args()
 
 
@@ -39,8 +42,20 @@ def print_error(message: str) -> None:
     print(colorize(message, Color.RED))
 
 
+def print_version() -> None:
+    import pkg_resources
+
+    version = pkg_resources.get_distribution(PACKAGE_NAME).version
+    print(version)
+
+
 def entrypoint() -> None:
     args = _parce_cli_arguments()
+
+    if args.version:
+        print_version()
+        sys.exit(0)
+
     storage = Storage(SERVICE_NAME)
     client = Client(storage)
 
