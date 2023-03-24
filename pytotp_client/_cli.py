@@ -28,6 +28,9 @@ def _parce_cli_arguments() -> argparse.Namespace:
     parser_search = subparser.add_parser("search", help="Search for items")
     parser_search.add_argument("pattern", type=str, help="search pattern")
 
+    subparser.add_parser("export", help="Export all items to stdout")
+    subparser.add_parser("import", help="Import items from stdin")
+
     parser.add_argument("--version", action="store_true", default=False)
 
     return parser.parse_args()
@@ -79,6 +82,20 @@ def entrypoint() -> None:
                 print_error(f"Nothing found for search pattern {args.pattern}")
             else:
                 print_items(items)
+
+        elif args.command == "export":
+            data = client.export_all()
+            print(data)
+
+        elif args.command == "import":
+            data = sys.stdin.read()
+            messages = client.import_data(data)
+            for message in messages:
+                if "OK" in message:
+                    print(colorize(message, Color.GREEN))
+                else:
+                    print_error(message)
+
         else:
             print_error("Missing required argument 'command'")
             sys.exit(4)

@@ -22,12 +22,12 @@ pykeychain = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2"
-mypy = "^0.991"
-black = "^22.12.0"
+mypy = "^1.1"
+black = "^23.1"
 isort = "^5.11.3"
 flake8 = "^6.0.0"
 bandit = "^1.7.4"
-types-setuptools = "^65.6.0"
+types-setuptools = "^67.6.0"
 
 [tool.poetry.scripts]
 totp = 'pytotp_client:entrypoint'
@@ -44,7 +44,7 @@ target_version = ['py38']
 profile = "django"
 lines_after_imports = 2
 line_length = 120
-src_paths = ["service"]
+src_paths = ["pytotp_client"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import binascii
 import dataclasses
+import json
 
 import pyotp
 from pykeychain import AlreadyExistsException, NotFoundException, Storage
@@ -74,3 +75,30 @@ class Client:
             self.storage.delete(account)
         except NotFoundException:
             raise ClientError(message=f"Entry {account} not found", return_code=1)
+
+    def export_all(self) -> str:
+        result = []
+        accounts = self.storage.get_all_accounts()
+        for account in accounts:
+            secret = self.storage.get_password(account)
+            result.append({"account": account, "secret": secret})
+        return json.dumps(result)
+
+    def import_data(self, data: str) -> list[str]:
+        messages: list[str] = []
+
+        items = json.loads(data)
+        for item in items:
+            try:
+                account = item["account"]
+                secret = item["secret"]
+            except KeyError:
+                raise ClientError(message="Invalid file format for importing data", return_code=4)
+            try:
+                self.storage.save_password(account, secret)
+            except AlreadyExistsException:
+                messages.append(f"Item {account} FAIL -> already exists")
+            else:
+                messages.append(f"Item {account} OK")
+
+        return messages
