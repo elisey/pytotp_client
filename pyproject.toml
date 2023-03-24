@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pytotp_client"
-version = "0.3.0"
-description = ""
+version = "0.4.0"
+description = "TOTP client for macOS"
 authors = ["Elisei <elisey.rav@gmail.comp>"]
 license = "MIT"
 readme = "README.md"
