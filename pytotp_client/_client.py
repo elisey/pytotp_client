@@ -24,7 +24,7 @@ class Item:
 
 
 class Client:
-    def __init__(self, storage: Storage):
+    def __init__(self, storage: Storage) -> None:
         self.storage = storage
 
     def _get_otp_from_secret(self, secret: str) -> str:
@@ -53,7 +53,7 @@ class Client:
         except NotFoundException:
             items = self.search_items(account)
             if not items:
-                raise ClientError(message=f"Entry {account} not found.", return_code=1)
+                raise ClientError(message=f"Entry {account} not found.", return_code=1) from None
             return items
 
         otp = self._get_otp_from_secret(secret)
@@ -63,18 +63,31 @@ class Client:
         try:
             pyotp.TOTP(secret).now()
         except binascii.Error as e:
-            raise ClientError(message=f"Invalid TOTP secret. {e}", return_code=3)
+            raise ClientError(message=f"Invalid TOTP secret. {e}", return_code=3) from None
 
         try:
             self.storage.save_password(account, secret)
         except AlreadyExistsException:
-            raise ClientError(message=f"Entry {account} already exists", return_code=2)
+            raise ClientError(message=f"Entry {account} already exists", return_code=2) from None
 
     def delete_secret(self, account: str) -> None:
         try:
             self.storage.delete(account)
         except NotFoundException:
-            raise ClientError(message=f"Entry {account} not found", return_code=1)
+            raise ClientError(message=f"Entry {account} not found", return_code=1) from None
+
+    def list_all(self) -> str:
+        accounts = self.storage.get_all_accounts()
+        return "\n".join(accounts)
+
+    def rename_account(self, old_account: str, new_account: str) -> None:
+        try:
+            secret = self.storage.get_password(old_account)
+        except NotFoundException:
+            raise ClientError(message=f"Entry {old_account} not found.", return_code=1) from None
+
+        self.set_secret(new_account, secret)
+        self.delete_secret(old_account)
 
     def export_all(self) -> str:
         result = []
@@ -93,7 +106,7 @@ class Client:
                 account = item["account"]
                 secret = item["secret"]
             except KeyError:
-                raise ClientError(message="Invalid file format for importing data", return_code=4)
+                raise ClientError(message="Invalid file format for importing data", return_code=4) from None
             try:
                 self.storage.save_password(account, secret)
             except AlreadyExistsException:

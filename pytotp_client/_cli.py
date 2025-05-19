@@ -1,3 +1,5 @@
+# ruff: noqa: T201, C901, PLR0912
+
 from __future__ import annotations
 
 import argparse
@@ -24,6 +26,12 @@ def _parce_cli_arguments() -> argparse.Namespace:
 
     parser_delete = subparser.add_parser("delete", help="Delete entry")
     parser_delete.add_argument("account", type=str, help="Account name")
+
+    subparser.add_parser("list", help="list all items to stdout")
+
+    parser_add = subparser.add_parser("rename", help="Rename TOTP account")
+    parser_add.add_argument("old_account", type=str, help="Old account name")
+    parser_add.add_argument("new_account", type=str, help="New account name")
 
     parser_search = subparser.add_parser("search", help="Search for items")
     parser_search.add_argument("pattern", type=str, help="search pattern")
@@ -75,6 +83,13 @@ def entrypoint() -> None:
             reply = input(f"Are you sure want to delete TOTP secret for {args.account}? (Yy/Nn): ")
             if reply in ["Y", "y"]:
                 client.delete_secret(args.account)
+
+        elif args.command == "list":
+            data = client.list_all()
+            print(data)
+
+        elif args.command == "rename":
+            client.rename_account(args.old_account, args.new_account)
 
         elif args.command == "search":
             items = client.search_items(args.pattern)

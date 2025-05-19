@@ -1,11 +1,12 @@
-[tool.poetry]
+[project]
 name = "pytotp_client"
-version = "0.4.0"
+version = "0.5.0"
 description = "TOTP client for macOS"
-authors = ["Elisei <elisey.rav@gmail.comp>"]
+authors = [
+    { name = "Elisei", email = "elisey.rav@gmail.com" }
+]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/elisey/pytotp_client"
 classifiers = [
 "Operating System :: MacOS",
 "License :: OSI Approved :: MIT License",
@@ -15,19 +16,20 @@ include = [
 "LICENSE",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.8.1"
-pyotp = "^2.7.0"
-pykeychain = "^1.1.0"
+[project.urls]
+Repository = "https://github.com/elisey/pytotp_client"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.2"
-mypy = "^1.1"
-black = "^23.1"
-isort = "^5.11.3"
-flake8 = "^6.0.0"
-bandit = "^1.7.4"
+[tool.poetry.dependencies]
+python = "^3.13"
+pyotp = "^2.9.0"
+pykeychain = "^2.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+mypy = "^1.15.0"
+bandit = "^1.8.3"
 types-setuptools = "^67.6.0"
+ruff = "^0.11.10"
 
 [tool.poetry.scripts]
 totp = 'pytotp_client:entrypoint'
@@ -36,15 +38,12 @@ totp = 'pytotp_client:entrypoint'
 strict = true
 ignore_missing_imports = true
 
-[tool.black]
+[tool.ruff]
 line-length = 120
-target_version = ['py38']
-
-[tool.isort]
-profile = "django"
-lines_after_imports = 2
-line_length = 120
-src_paths = ["pytotp_client"]
+lint.select = ["ALL"]
+lint.ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D107", "D203", "D211", "D213", "COM812", "S603", "PERF401", "SIM102", "SIM108", "N818"]
+target-version = "py313"
+extend-exclude = ["tests"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
