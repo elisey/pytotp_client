@@ -47,6 +47,14 @@ class Client:
             items.append(item)
         return items
 
+    def generate_otp_auth_url(self, email: str, account: str) -> str:
+        try:
+            secret = self.storage.get_password(account)
+        except NotFoundException:
+            raise ClientError(message=f"Entry {account} not found.", return_code=1) from None
+        totp = pyotp.TOTP(secret)
+        return totp.provisioning_uri(name=email, issuer_name=account)
+
     def get_otp(self, account: str) -> list[Item]:
         try:
             secret = self.storage.get_password(account)

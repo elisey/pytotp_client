@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
+import qrcode
 from pykeychain import Storage
 
 from ._client import Client, ClientError, Item
@@ -35,6 +36,10 @@ def _parce_cli_arguments() -> argparse.Namespace:
 
     parser_search = subparser.add_parser("search", help="Search for items")
     parser_search.add_argument("pattern", type=str, help="search pattern")
+
+    parser_qr = subparser.add_parser("qr", help="Generate QR code for the account")
+    parser_qr.add_argument("email", type=str, help="User's email")
+    parser_qr.add_argument("account", type=str, help="Account name")
 
     subparser.add_parser("export", help="Export all items to stdout")
     subparser.add_parser("import", help="Import items from stdin")
@@ -97,6 +102,11 @@ def entrypoint() -> None:
                 print_error(f"Nothing found for search pattern {args.pattern}")
             else:
                 print_items(items)
+
+        elif args.command == "qr":
+            url = client.generate_otp_auth_url(args.email, args.account)
+            qr = qrcode.make(url)
+            qr.show()
 
         elif args.command == "export":
             data = client.export_all()
