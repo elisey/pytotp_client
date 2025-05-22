@@ -1,6 +1,6 @@
 [project]
 name = "pytotp_client"
-version = "0.6.0"
+version = "0.6.1"
 description = "TOTP client for macOS"
 authors = [
     { name = "Elisei", email = "elisey.rav@gmail.com" }
