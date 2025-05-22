@@ -59,10 +59,13 @@ def print_error(message: str) -> None:
 
 
 def print_version() -> None:
-    import pkg_resources
+    import importlib.metadata
 
-    version = pkg_resources.get_distribution(PACKAGE_NAME).version
-    print(version)
+    try:
+        version = importlib.metadata.version(PACKAGE_NAME)
+        print(version)
+    except importlib.metadata.PackageNotFoundError:
+        print("Package version not found.")
 
 
 def entrypoint() -> None:
